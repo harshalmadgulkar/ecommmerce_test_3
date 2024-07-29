@@ -22,8 +22,8 @@ function App() {
       element: <Navigation />,
       children: [
         { index: true, element: <Navigate to='/all-products' /> },
-        { path: 'all-products', element: <AllProducts /> },
-        { path: 'add-product', element: <AddProduct /> },
+        { path: '/all-products', element: <AllProducts /> },
+        { path: '/add-product', element: <AddProduct /> },
       ],
     },
   ]);
