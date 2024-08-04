@@ -4,8 +4,8 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { RxStarFilled, RxStar } from 'react-icons/rx';
 // imports redux methods
-import { useDispatch } from 'react-redux';
-import { actions } from '../redux/reducers/productReducer';
+// import { useDispatch } from 'react-redux';
+// import { actions } from '../redux/reducers/productReducer';
 // import react-toastify components
 import { toast, ToastContainer } from 'react-toastify';
 // firebase imports
@@ -27,6 +27,7 @@ const ProductCardDetails = ({
   itemRating,
   description,
   firebaseDocid,
+  inCart,
 }) => {
   const [allowEdit, setAllowEdit] = useState(false);
   const [localItemName, setLocalItemName] = useState(itemName);
@@ -34,7 +35,8 @@ const ProductCardDetails = ({
   const [localItemRating, setLocalItemRating] = useState(itemRating);
   const [localDescription, setLocalDescription] = useState(description);
 
-  const dispatch = useDispatch();
+  // for react-redux
+  // const dispatch = useDispatch();
 
   const handleDelete = async () => {
     console.log(itemId);
@@ -45,7 +47,32 @@ const ProductCardDetails = ({
     const productRef = collection(db, 'products');
     await deleteDoc(doc(productRef, firebaseDocid));
 
+    toast.dismiss();
     toast.error('Item deleted successfully.');
+  };
+
+  const handleCart = async () => {
+    // update state with new value
+    const editedProduct = {
+      itemId,
+      itemName: localItemName,
+      itemPrice: localItemPrice,
+      itemRating: localItemRating,
+      description: localDescription,
+      inCart: !inCart,
+    };
+
+    // for firebase db
+    const productRef = collection(db, 'products');
+    const docRef = doc(productRef, firebaseDocid);
+    await updateDoc(docRef, editedProduct);
+
+    toast.dismiss();
+    if (!inCart) {
+      toast.success('Product added to cart successfully.');
+    } else {
+      toast.success('Product removed from cart successfully.');
+    }
   };
 
   const handleEdit = () => {
@@ -60,6 +87,7 @@ const ProductCardDetails = ({
       itemPrice: localItemPrice,
       itemRating: localItemRating,
       description: localDescription,
+      inCart: inCart,
     };
     // for redux
     // dispatch(actions.edit(editedProduct));
@@ -70,6 +98,7 @@ const ProductCardDetails = ({
     await updateDoc(docRef, editedProduct);
 
     setAllowEdit(false);
+    toast.dismiss();
     toast.success('Product edited successfully.');
   };
 
@@ -102,6 +131,8 @@ const ProductCardDetails = ({
           localItemPrice={localItemPrice}
           localItemRating={localItemRating}
           localDescription={localDescription}
+          inCart={inCart}
+          handleCart={handleCart}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -164,6 +195,7 @@ const EditForm = ({
                 if (newValue >= 0 && newValue <= 5) {
                   setLocalItemRating(newValue);
                 } else {
+                  toast.dismiss();
                   // alert('Rating must be between 0 and 5');
                   toast.warn('Rating must be between 0 and 5.', {
                     theme: 'dark',
@@ -202,6 +234,8 @@ const DisplayCard = ({
   localItemPrice,
   localItemRating,
   localDescription,
+  inCart,
+  handleCart,
   onEdit,
   onDelete,
 }) => {
@@ -246,6 +280,12 @@ const DisplayCard = ({
           </button>
           <button onClick={onDelete}>
             <MdDelete />
+          </button>
+          <button
+            className='ring-1 ring-black rounded-sm p-2 m-2'
+            onClick={handleCart}
+          >
+            {inCart ? 'Remove from Cart' : 'Add to Cart'}
           </button>
         </div>
       </div>

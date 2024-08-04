@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 // import nanoid for unique ids
 import { nanoid } from 'nanoid';
 // imports redux methods
-import { useDispatch } from 'react-redux';
-import { actions } from '../redux/reducers/productReducer';
+// import { useDispatch } from 'react-redux';
+// import { actions } from '../redux/reducers/productReducer';
 // import react-toastify
 import { toast, ToastContainer } from 'react-toastify';
 // firebase imports
@@ -24,7 +24,8 @@ const AddProduct = () => {
   const [price, setPrice] = useState('');
   const [rating, setRating] = useState(0);
 
-  const dispatch = useDispatch();
+  // for react-redux
+  // const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,6 +36,7 @@ const AddProduct = () => {
       itemPrice: parseFloat(price),
       itemRating: parseInt(rating),
       description: description,
+      inCart: false,
     };
     // Add product to database
     const productRef = collection(db, 'products');
@@ -56,7 +58,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className='max-w-md mx-auto p-4 pt-6 pb-8 mb-4 bg-white rounded align flex flex-col'>
+    <div className='max-w-md mx-auto p-4 pt-6 pb-8 mb-4 bg-white rounded-2xl align flex flex-col mt-4'>
       <h1 className='text-2xl mb-4'>Add a Product</h1>
       <form onSubmit={handleSubmit} className='flex flex-col'>
         <div className='mb-4'>

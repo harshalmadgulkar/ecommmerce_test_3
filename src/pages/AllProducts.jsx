@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 // import components
-import ProductCardDetails from './ProductCardDetails.jsx';
+import ProductCardDetails from '../components/ProductCardDetails.jsx';
 // import react-icons
 import { IoCloseCircle } from 'react-icons/io5';
 // imports redux methods
-import { productSelector } from '../redux/reducers/productReducer.js';
-import { useSelector, useDispatch } from 'react-redux';
-import { actions } from '../redux/reducers/productReducer';
+// import { productSelector } from '../redux/reducers/productReducer.js';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { actions } from '../redux/reducers/productReducer';
 // import react-toastify elements
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -26,10 +26,13 @@ const AllProducts = () => {
   // for redux use
   // const products = useSelector(productSelector);
   const [products, setProducts] = useState();
-  const dispatch = useDispatch();
+
+  // for react-redux
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     syncData();
+    toast.dismiss();
     toast.success('Products retrived successfully.');
   }, []);
 
@@ -69,6 +72,7 @@ const AllProducts = () => {
             itemPrice={product.itemPrice}
             itemRating={product.itemRating}
             description={product.description}
+            inCart={product.inCart}
             // firebase doc id
             firebaseDocid={product.id}
           />
